@@ -4,11 +4,12 @@
 #include <vector>
 #include <map>
 #include <future>
+#include <algorithm>
 
-#define _DEBUG
+//#define _DEBUG
 
 //use 'sort' instead of 'lower_bound' on insert, because 'lower_bound' is too slow on big data size
-//#define _POST_SHUFFLE_SORT
+#define _POST_SHUFFLE_SORT
 
 using FunctorContainer = std::vector<std::string>;
 using ResultsContainer = std::vector<FunctorContainer>;
