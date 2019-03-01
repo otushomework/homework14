@@ -8,9 +8,6 @@
 
 //#define _DEBUG
 
-//use 'sort' instead of 'lower_bound' on insert, because 'lower_bound' is too slow on big data size
-#define _POST_SHUFFLE_SORT
-
 using FunctorContainer = std::vector<std::string>;
 using ResultsContainer = std::vector<FunctorContainer>;
 
@@ -233,15 +230,7 @@ public:
                     //thread safe insert
                     std::lock_guard<std::mutex> lock(*shuffleMutexes.at(index));
 
-#ifndef _POST_SHUFFLE_SORT
-                    //insert with sorting
-                    shuffleResults[index].insert(std::lower_bound(shuffleResults[index].begin(),
-                                                                  shuffleResults[index].end(),
-                                                                  value),
-                                                 std::move(value));
-#else
                     shuffleResults[index].push_back(std::move(value));
-#endif
                 }
             }));
         }
@@ -252,13 +241,11 @@ public:
             future.get();
         }
 
-#ifdef _POST_SHUFFLE_SORT
         //sort local vector
         for(auto &result : shuffleResults)
         {
             std::sort(result.begin(), result.end());
         }
-#endif
 
         return shuffleResults;
     }
