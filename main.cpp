@@ -6,7 +6,7 @@
 #include <future>
 #include <algorithm>
 
-//#define _DEBUG
+#define _DEBUG
 
 using FunctorContainer = std::vector<std::string>;
 using ResultsContainer = std::vector<FunctorContainer>;
@@ -14,23 +14,23 @@ using ResultsContainer = std::vector<FunctorContainer>;
 class MapFunctor
 {
 public:
-    auto operator()(std::string &line)
+    FunctorContainer operator()(std::string &line)
     {
         FunctorContainer list;
 
         std::transform(line.begin(), line.end(), line.begin(), ::tolower);
         for(char& c : line)
         {
-            if (list.empty())
-                list.push_back(std::string(&c, 1));
-            else
-                list.push_back(list.at(list.size() - 1 ) + std::string(&c, 1));
+            list.push_back(( !list.empty() ? list.at(list.size() - 1 )
+                                          : std::string())
+                           + std::string(&c, 1));
 
-//#ifdef _DEBUG
-//            std::cout << list.at(list.size() - 1) << std::endl;
-//#endif
+#ifdef _DEBUG
+            std::cout << list.at(list.size() - 1) << std::endl;
+#endif
         }
 
+        //for empty strings return empty list
         return list;
     }
 };
@@ -44,7 +44,7 @@ public:
 
     }
 
-    auto operator()(std::string &line)
+    FunctorContainer operator()(std::string &line)
     {
         //list of one element, will be inserted to another FunctorContainer
         FunctorContainer list;
