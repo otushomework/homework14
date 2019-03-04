@@ -6,7 +6,7 @@
 #include <future>
 #include <algorithm>
 
-#define _DEBUG
+//#define _DEBUG
 
 using FunctorContainer = std::vector<std::string>;
 using ResultsContainer = std::vector<FunctorContainer>;
